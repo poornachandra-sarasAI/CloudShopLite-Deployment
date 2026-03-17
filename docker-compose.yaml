@@ -1,0 +1,49 @@
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: api
+    environment:
+      REDIS_HOST: redis
+    ports:
+      - "5000:5000"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ./Worker
+      dockerfile: Dockerfile
+    container_name: worker
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    environment:
+      API_URL: http://api:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_started
