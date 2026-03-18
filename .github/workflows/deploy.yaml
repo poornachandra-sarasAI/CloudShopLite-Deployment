@@ -58,7 +58,7 @@ jobs:
       # 🚀 Deploy with Helm
       - name: Deploy using Helm
         run: |
-          helm upgrade --install my-release ./helm \
+          helm upgrade --install my-release-1 ./helm \
             --set api.image.repository=$ECR_REGISTRY/api \
             --set worker.image.repository=$ECR_REGISTRY/worker \
             --set frontend.image.repository=$ECR_REGISTRY/frontend
