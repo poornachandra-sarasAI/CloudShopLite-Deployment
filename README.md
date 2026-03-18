@@ -1,107 +1,107 @@
-# Container Technology Project
 
-This project demonstrates a microservices-based deployment using Docker and Kubernetes. It consists of three main components: API, Frontend, and Worker, along with Redis for caching and message brokering. All services are containerized and orchestrated via Kubernetes manifests.
+# CloudShop Lite — Microservices Demo
+
+This project showcases a microservices architecture using Docker and Kubernetes, featuring:
+
+- **API**: Python Flask backend
+- **Frontend**: Python Flask web UI
+- **Worker**: Python background job processor
+- **Redis**: Caching & message broker
+
+All services are containerized and orchestrated with Kubernetes manifests. The live demo is available at:
+
+**Public URL:** [http://a42ec1aa062b9405387fc7b9d766a850-879456498.us-east-1.elb.amazonaws.com:3000/](http://a42ec1aa062b9405387fc7b9d766a850-879456498.us-east-1.elb.amazonaws.com:3000/)
+
+---
 
 ## Project Structure
 
 ```
-API/
-  app.py
-  Dockerfile
-Frontend/
-  app.py
-  Dockerfile
-Worker/
-  worker.py
-  Dockerfile
-  requirements.txt
-k8s-manifests/
-  api-deployment.yaml
-  api-service.yaml
-  frontend-deployment.yaml
-  frontend-service.yaml
-  redis-deployment.yaml
-  redis-service.yaml
-  worker-deployment.yaml
-docs/
+API/           # Backend Flask app
+Frontend/      # Web UI Flask app
+Worker/        # Background job processor
+k8s-manifests/ # Kubernetes YAMLs
+helm/          # Helm chart for advanced deployment
+docs/          # Documentation
+ci-cd/         # CI/CD configs
 ```
 
-## Components
+## Features
 
-- **API**: Backend service (Python) providing core business logic.
-- **Frontend**: Web interface (Python, likely Flask or Streamlit).
-- **Worker**: Background processing service (Python).
-- **Redis**: Used for caching and as a message broker.
+- **Frontend** displays visit count and background job stats
+- **API** exposes endpoints for visit tracking and health checks
+- **Worker** increments background job count in Redis
+- **Redis** enables fast state sharing between services
 
-## Deployment Instructions
+---
+
+## Quick Start
 
 ### 1. Build Docker Images
 
 Navigate to each service directory and build the Docker images:
 
-```
-cd API
-# Build API image
-docker build -t api-service .
 
-cd ../Frontend
-# Build Frontend image
-docker build -t frontend-service .
-
-cd ../Worker
-# Build Worker image
-docker build -t worker-service .
+```bash
+cd API && docker build -t api-service .
+cd ../Frontend && docker build -t frontend-service .
+cd ../Worker && docker build -t worker-service .
 ```
 
-### 2. Kubernetes Deployment
 
-Apply the Kubernetes manifests from the `k8s-manifests` directory:
+### 2. Deploy to Kubernetes
 
-```
+Apply all manifests:
+
+```bash
 kubectl apply -f k8s-manifests/
 ```
 
 This will deploy:
-- API, Frontend, Worker, and Redis as separate pods
-- Services for API, Frontend, Redis
+- API, Frontend, Worker, Redis as pods
+- Services for API, Frontend (LoadBalancer), Redis
 
-### 3. Accessing the Services
+**Frontend** is exposed via LoadBalancer. Access the app at the public URL above.
 
-- **Frontend**: Exposed via a Kubernetes service. Use `kubectl get svc` to find the external IP/port.
-- **API**: Accessible via its service.
-- **Worker**: Runs as a background job, not directly exposed.
-- **Redis**: Internal service for API and Worker communication.
+---
 
-### 4. Local Development
+### 3. Local Development
 
-You can run each component locally for development:
+You can run each component locally:
 
+```bash
+cd API && python app.py
+cd Frontend && python app.py
+cd Worker && python worker.py
 ```
-# Example for API
-cd API
-python app.py
 
-# Example for Frontend
-cd Frontend
-python app.py
 
-# Example for Worker
-cd Worker
-python worker.py
-```
+---
 
 ## Requirements
 
 - Docker
-- Kubernetes (minikube, kind, or local cluster)
+- Kubernetes (minikube, kind, or cloud cluster)
 - Python 3.x
 - Redis
 
-## Notes
+---
 
-- All manifests are designed for local development. For cloud deployment, update image repositories and service types as needed.
-- Make sure to configure environment variables and secrets securely for production.
+## Environment Variables
+
+- `REDIS_HOST`: Hostname for Redis (default: `localhost` or `redis-service` in k8s)
+- `API_URL`: API endpoint for Frontend (default: `http://localhost:5000` or `http://api-service:5000` in k8s)
+
+---
+
+## Cloud & Production Notes
+
+- Update image repositories in manifests for your registry
+- Use Helm for advanced configuration and upgrades
+- Secure environment variables and secrets for production
+
+---
 
 ## License
 
-This project is for educational purposes.
+MIT — For educational use
