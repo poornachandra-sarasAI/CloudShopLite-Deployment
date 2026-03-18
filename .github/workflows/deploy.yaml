@@ -59,3 +59,7 @@ jobs:
       - name: Deploy using Helm
         run: |
           helm upgrade --install my-release-1 ./helm 
+          kubectl rollout restart deployment frontend-deployment
+          kubectl rollout restart deployment api-deployment
+          kubectl rollout restart deployment worker-deployment
+          

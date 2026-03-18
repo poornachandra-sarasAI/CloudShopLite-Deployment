@@ -14,7 +14,7 @@ def home():
         <p>Visits: {res['visits']}</p>
         <br>
         <p>Background Jobs: {res['background_jobs']}</p>
-        <h1> Swaraj The Best</h1>
+        <h1> Happy Deployment!! </h1>
         """
     except:
         return "<h1>Frontend running, API unavailable</h1>"
